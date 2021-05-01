@@ -69,23 +69,17 @@ client.connect((err) => {
   // Adding Order
   app.post("/addOrder", (req, res) => {
     // const file = req.files.file;
+    console.log(req.body);
     const name = req.body.name;
     const desc = req.body.desc;
     const email = req.body.email;
     const service = req.body.service;
     const price = req.body.price;
-    const newImg = file.data;
-    const encImg = newImg.toString("base64");
-
-    var image = {
-      contentType: file.mimetype,
-      size: file.size,
-      img: Buffer.from(encImg, "base64"),
-    };
-
+    
     userServicesCollection
-      .insertOne({ name, desc, email, service, price, image })
+      .insertOne({ name, desc, email, service, price})
       .then((result) => {
+        console.log(result);
         res.send(result.insertedCount > 0);
       });
   });
@@ -124,7 +118,7 @@ client.connect((err) => {
       });
   });
 
-  // Finding Admin
+  // Find Admin
   app.get("/isAdmin/:email", (req, res) => {
     adminCollection
       .find({ email: req.params.email })
@@ -134,7 +128,7 @@ client.connect((err) => {
       });
   });
 
-  app.get('/orders/:email', (req, res) =>{
+  app.get('/orders', (req, res) =>{
     userServicesCollection.find({email: req.query.email})
     .toArray((err, documents)=>{
         res.send(documents);
